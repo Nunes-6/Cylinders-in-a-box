@@ -1,0 +1,99 @@
+import math
+
+
+def std(d,l,ccl,baseA,baseB):
+    #baseA as ground base
+    maxcell = math.floor(baseA/d)
+    spare = baseA - (maxcell * d)
+    if maxcell > 1:
+        s = spare/(maxcell - 1)
+    else:
+        s = spare
+    #n is number of vertical rows in arrangement below
+    #ooo
+    # ooo
+    #...
+    h = math.sqrt((0.75*math.pow(d,2)) - (0.5*d*s) - (0.25*math.pow(s,2)))
+    n = math.floor(((baseB - d)/h) + 1)
+    #print(n)
+    #print(maxcell)
+
+    total = n*maxcell - math.floor(n/2)
+##    for i in range(1,n):
+##        if i%2 != 0:
+##            total += maxcell
+##        elif i%2 == 0:
+##            total += maxcell-1
+    #print(total)
+    maxlen = math.floor(ccl/l)
+    #print(maxlen)
+    total *= maxlen
+    print(total)
+    #remheight = baseB - (d + (n-1)*h)
+    #print(remheight)
+    remccl = ccl - (maxlen*l)
+    #print(remccl)
+    return total, remccl
+
+
+#all dimensions in mm
+d = int(input("Cell diameter: "))
+l = int(input("Cell length: "))
+ccl = int(input("Cube dimension aligned with cell length: "))
+baseA = int(input("First base dimension: "))
+baseB = int(input("Second base dimension: "))
+
+
+print("First run")
+total, remccl = std(d,l,ccl,baseA,baseB)
+#recycling stage
+print("Recycling Stage 1")
+recycled, waste = std(d,l,baseB,baseA,remccl)
+max1 = total+recycled
+print("Max number of cells: "+str(max1))
+
+print("Second run")
+total, remccl = std(d,l,baseA,ccl,baseB)
+#recycling stage
+print("Recycling Stage 2")
+recycled, waste = std(d,l,baseB,remccl,baseA)
+max2 = total+recycled
+print("Max number of cells: "+str(max2))
+
+print("Third run")
+total, remccl = std(d,l,baseA,baseB,ccl)
+#recycling stage
+print("Recycling Stage 3")
+recycled, waste = std(d,l,remccl,baseB,baseA)
+max3 = total+recycled
+print("Max number of cells: "+str(max3))
+
+print("Fourth run")
+total, remccl = std(d,l,ccl,baseB,baseA)
+#recycling stage
+print("Recycling Stage 4")
+recycled, waste = std(d,l,baseA,baseB,remccl)
+max4 = total+recycled
+print("Max number of cells: "+str(max4))
+
+print("Fifth run")
+total, remccl = std(d,l,baseB,baseA,ccl)
+#recycling stage
+print("Recycling Stage 5")
+recycled, waste = std(d,l,remccl,baseA,baseB)
+max5 = total+recycled
+print("Max number of cells: "+str(max5))
+
+print("Sixth run")
+total, remccl = std(d,l,baseB,ccl,baseA)
+#recycling stage
+print("Recycling Stage 6")
+recycled, waste = std(d,l,baseA,remccl,baseB)
+max6 = total+recycled
+print("Max number of cells: "+str(max6))
+
+megamax = max(max1,max2,max3,max4,max5,max6)
+print("Simon Says "+str(megamax)+" is the highest nimber of cells that fits this box")
+
+
+
